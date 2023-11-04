@@ -1,34 +1,33 @@
 # Tensorflow_Face_Attendance
-# Tensorflow_Face_Attendance项目使用说明
 
-## 文件夹说明：
+## Folder description:
 
-### APP中     ——application_data——input——image（验证结果输出文件夹）——verification_images（验证的模型图片建议从positive中随机选取50张图片）——FaceAPP.py
+### APP -- application_data -- input -- image (verification result output folder) -- verification_images (it is recommended to randomly select 50 images from positive for verification model images) -- FaceAPP.py
 
-### 根目录中     ——application_data——input——image（验证结果输出文件夹）——verification_images（验证的模型图片建议从positive中随机选取50张图片）
+### In the root directory -- application_data -- input -- image (verification result output folder) -- verification_images (It is recommended to randomly select 50 images from positive for verification model images)
 
-### data中     ——anchor通过ImgCatch1中自定义要训练的人脸，建议录取300张；——positive中，通过ImgCatch1中自定义要训练的人脸，建议录取300张 	——negative中，内置了野生数据集（无需更改）
+In ### data -- anchor defines the faces to be trained through ImgCatch1, and it is recommended to admit 300 faces; -- In positive, customize the faces to be trained through ImgCatch1, and it is recommended to admit 300 faces -- in negative, wild data set is built in (no need to change)
 
-### training_checkpoints中————保存训练数据的节点（方便后期数据回滚）
+### training_checkpoints ———— checkpoints (convenient for later data rollback)
 
-## 在Pycham中导入本项目：
+## Import this project in Pycham:
 
-## py文件运行顺序：
+## py file run order:
 
-## 0.先运行ImgPath0.py，预处理野生数据集（本项目已经处理好，无需运行，若需要训练其他类型数据集，可以按照py文件内部注释导入操作）
+## 0. Run ImgPath0.py first to preprocess wild data sets (this project has already been processed, so there is no need to run it. If you need to train other types of data sets, you can follow the import operation of annotations inside the py file)
 
-## 1.运行ImgCatch1.py，通过该文件调用摄像头，捕捉人脸图像，图像需录入两次：一次anchor文件夹，一次positive文件夹（具体录入按键操作根据py文件内注释提示操作）
+Run ImgCatch1.py to call the camera through the file and capture the face image. Input the image twice: once in the anchor folder and once in the positive folder. (For specific input, press the key according to the comments in the py file.)
 
-## 1.1 运行ImgPreprocess2.py对录取图片的预处理（剪裁100x100x3）
+## 1.1 Run ImgPreprocess2.py to preprocess the image (crop 100x100x3)
 
-1. ## 测试py文件
+1. ## Test the py file
 
-## 2.1  Model_Engineerin3.py运行该文件验证模型是否可用
+## 2.1 Model_Engineerin3.py Runs this file to verify that the model is available
 
-## 2.2 Training.py为训练代码，运行该文件对已录入的图像按照模型进行训练
+## 2.2 Training.py is the Training code. Run this file to train the entered images according to the model
 
-1. ## cvOS.py对已训练的模型进行预验证（可测试模型是否可用）
+1. ## cvOS.py pre-validates the trained model (can test whether the model is available)
 
-## PS : TensorFlowTest.py 该文件验证TensorFlow-GPU是否可用
+## PS: TensorFlowTest.py This file verifies that TensorFlow-GPU is available
 
-## 最后在APP文件夹中，运行FaceAPP.py即可
+## Finally in the APP folder, run FaceAPP.py
