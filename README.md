@@ -1,12 +1,8 @@
-## 项目实现效果
+## Project implementation effect
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/48f2b63643bb4ebc83d12ec40380c598.png)
 
-### 补充
-**PS：项目地址在最后会开源**
-
-本项目使用**TensorFlow-GPU**进行训练：需要提前搭建好**CUDA环境**具体可以参考本文：[TensorFlow-GPU-2.4.1与CUDA安装教程](https://blog.csdn.net/weixin_50679163/article/details/124395836?spm=1001.2014.3001.5502)
-### 模型数据
-#### 嵌入模型
+### Model data
+#### embedded model
 ```bash
 Model: "embedding"
 _________________________________________________________________
@@ -37,7 +33,7 @@ Trainable params: 38,960,448
 Non-trainable params: 0
 _________________________________________________________________
 ```
-#### CNN神经网络模型
+#### CNN neural network model
 ```bash
 Model: "SiameseNetWork"
 __________________________________________________________________________________________________
@@ -61,52 +57,51 @@ Non-trainable params: 0
 __________________________________________________________________________________________________
 ```
 
-# 项目概述
-## 项目运行流程
-**1. 收集人脸数据—设置数据的路径并对数据集预处理**
+# Project Overview
+## Project operation process
+**1. Collect face data - set the path of the data and preprocess the data set **
 
-**2. 构建训练模型——搭建深度神经网络**
+**2. Build training models -- Build deep neural networks **
 
-**3. 深度训练人脸数据——CNN卷积神经网络+TensorFlow+Keras**
+**3. Deep training face data -- CNN Convolutional Neural Network +TensorFlow+Keras**
 
-**4. 搭建人脸识别APP——OpenCV+Kivy.APP**
+**4. Build a face recognition APP -- OpenCV+Kivy.APP**
 
-## 核心环境配置
+## Core environment configuration
 **Python == 3.9.0
 labelme == 5.0.1
 tensorflow -gpu == 2.7.0 （CUDA11.2）
 opencv-python == 4.0.1
 Kivy == 2.1.0
 albumentations == 0.7.12**
-# 项目核心代码详解
-## 目录
+# Project core code details
+## Directory
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/767c43c5c01f4266b9dd9a4287c81637.png)
 
 
-|名称|用途  |
+| Name | Use |
 |--|--|
-| data | 收集的人脸数据 |
-| data-anchor | 被测人脸数据 |
-|data-negative  |混淆数据集  |
-| data-positive  |预处理后人脸数据  |
-| training_checkpoints | 训练数据集日志（检查点） |
-|.h5  | 已训练好的人脸模型（.h5） |
-|ImgPath0.py  | 设置数据集的目录 |
-|ImgCatch1.py | 手机人脸数据 |
-|ImgPreprocess2.py  | 图像预处理 |
-|Model_Engineering3  | 构建训练模型 |
-|Training.py | 深度训练数据集 |
-|cvOS.py | 人脸识别APP |
-|TensorFlowTest.py | CUDA环境检测 |
+| data | collected face data |
+| data-anchor | Face data of the tested |
+|data-negative | confuses the data set |
+| data-positive | After pretreatment, face data |
+| training_checkpoints | Training dataset logs (checkpoints) |
+|.h5 | The trained face model (.h5) |
+|ImgPath0.py | Sets the directory of the dataset |
+|ImgCatch1.py | mobile phone face data |
+|ImgPreprocess2.py | Image preprocessing |
+|Model_Engineering3 | Build training model |
+| training. py | deep Training dataset |
+|cvOS.py | facial recognition APP |
+|TensorFlowTest.py | CUDA environment test |
 
-**本项目用的到野生人脸数据集下载地址：[深度学习人脸训练数据集](https://download.csdn.net/download/weixin_50679163/86500793)**
+**This project used to download the address to the wild face dataset：[Deep learning face training dataset](https://download.csdn.net/download/weixin_50679163/86500793)**
 
-**本项目基于《Siamese Neural Networks for One-shot Image Recognition》这篇论文为理论基础：[Siamese Neural Networks for One-shot Image Recognition](https://download.csdn.net/download/weixin_50679163/86500796)**
+**This project is based on the paper "Siamese Neural Networks for One-shot Image Recognition"：[Siamese Neural Networks for One-shot Image Recognition](https://download.csdn.net/download/weixin_50679163/86500796)**
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/985203de43e54464a74aa9fa5251b7b0.png)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/5401d7e389124484ac9f48cf7a40fec8.png)
-# 核心代码
-**引入的核心库文件：**
-
+# Core code
+** Introduced core library files: **
 ```python
 import cv2
 import numpy as np
@@ -117,14 +112,14 @@ from tensorflow.keras.layers import Layer, Conv2D, Dense, MaxPooling2D, Input, F
 import tensorflow as tf
 ```
 
-**加入GPU内存增长限制—防止爆显存**
+** Added GPU memory growth limit - prevent flash memory **
 
 ```python
 gpus = tf.config.experimental.list_physical_devices('GPU')
 for gpu in gpus: 
     tf.config.experimental.set_memory_growth(gpu, True)
 ```
-# 设置数据集目录
+# Set the data set directory
 
 ```python
 POS_PATH = os.path.join('data', 'positive')
@@ -143,7 +138,7 @@ for directory in os.listdir('666'):
         os.replace(EX_PATH, NEW_PATH)
 ```
 
-# 收集人脸识别数据——UUID格式命名
+# Collect face recognition data - UUID format naming
 
 ```python
 cap = cv2.VideoCapture(0)
@@ -177,7 +172,7 @@ cap.release()
 cv2.destroyAllWindows()
 ```
 
-# 创建标签化数据集
+# Create a labeled dataset
 
 ```python
 positives = tf.data.Dataset.zip((anchor, positive, tf.data.Dataset.from_tensor_slices(tf.ones(len(anchor)))))
@@ -188,7 +183,7 @@ samples = data.as_numpy_iterator()
 exampple = samples.next()
 ```
 
-# 构建训练和测试数据的分区
+# Build partitions of training and test data
 
 ```python
 def preprocess_twin(input_img, validation_img, label):
@@ -211,7 +206,7 @@ test_data = test_data.batch(16)
 test_data = test_data.prefetch(8)``
 ```
 
-# 创建模型
+# Create a model
 
 ```python
 inp = Input(shape=(100,100,3), name='input_image')
@@ -258,7 +253,7 @@ def make_embedding():
     embedding = make_embedding()
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/5a1d72b7d8434a16a1e6b93f26e2ae50.png)
-# 构建距离层
+# Build the distance layer
 
 ```python
 # L1距离层
@@ -274,7 +269,7 @@ class L1Dist(Layer):
         l1 = L1Dist()
         l1(anchor_embedding, validation_embedding)
 ```
-# 构建神经网络模型
+# Build a neural network model
 
 ```python
 input_image = Input(name='input_img', shape=(100,100,3))
@@ -289,21 +284,21 @@ classifier = Dense(1, activation='sigmoid')(distances)
 siamese_network = Model(inputs=[input_image, validation_image], outputs=classifier, name='SiameseNetwork')
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/c7bf0911574a430fb7d2deac7eeced62.png)
-# 深度训练模型
-## 搭建损失值和优化器
+# Deep training model
+## Build loss values and optimizers
 
 ```python
 binary_cross_loss = tf.losses.BinaryCrossentropy()
 opt = tf.keras.optimizers.Adam(1e-4) # 0.0001
 ```
-## 设置训练检查点
+## Set up training checkpoints
 
 ```python
 checkpoint_dir = './training_checkpoints'
 checkpoint_prefix = os.path.join(checkpoint_dir, 'ckpt')
 checkpoint = tf.train.Checkpoint(opt=opt, siamese_model=siamese_model)
 ```
-# 设置训练batch
+# Set up the training batch
 
 ```python
 test_batch = train_data.as_numpy_iterator()
@@ -337,7 +332,7 @@ def train_step(batch):
     # 返回损失值
     return loss
 ```
-## 设置训练循环
+## Set the training loop
 
 ```python
 def train(data, EPOCHS):
@@ -357,24 +352,24 @@ def train(data, EPOCHS):
             checkpoint.save(file_prefix=checkpoint_prefix)
 ```
 
-### 开始训练
+### Start training
 
 ```python
 EPOCHS = 50000
 train(train_data, EPOCHS)
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/ba23010065944f4c9b0894f1dd1c8964.png)
-### 保存模型
+### Save the model
 
 ```python
 siamese_model.save('siamesemodel.h5')
 ```
-### 加载模型
+### Load model
 ```python
 model = tf.keras.models.load_model('siamesemodel.h5', 
                                    custom_objects={'L1Dist':L1Dist, 'BinaryCrossentropy':tf.losses.BinaryCrossentropy})
 ```
-# 测试模型识别效果
+# Test the model recognition effect
 ```python
 cap = cv2.VideoCapture(0)
 while cap.isOpened():
@@ -394,7 +389,7 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 ```
-# 人脸识别APP—窗口UI
+# Face recognition APP - Window UI
 
 ```python
 # Coding BIGBOSSyifi
